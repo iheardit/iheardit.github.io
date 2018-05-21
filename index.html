@@ -24,6 +24,7 @@
 
     <!-- Plugin CSS -->
     <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="css/creative.min.css" rel="stylesheet">
@@ -258,7 +259,10 @@
 <section class="bg-dark text-white">
     <div class="container text-center">
         <h2 class="mb-4">Still not convinced?</h2>
-        <a class="btn btn-light btn-xl sr-button" href="http://iheardit.io">Check for yourself</a>
+        <a class="btn btn-light btn-xl sr-button animated"
+           id="btn-check"
+           style="color: #212529">
+            Check for yourself</a>
     </div>
 </section>
 
@@ -295,10 +299,36 @@
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="vendor/scrollreveal/scrollreveal.min.js"></script>
 <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-color/2.1.2/jquery.color.min.js"></script>
 
 <!-- Custom scripts for this template -->
 <script src="js/creative.min.js"></script>
+<script>
+    var $btn = $("#btn-check");
 
+    function animateSuccess() {
+        $btn.removeClass('pulse infinite');
+        $btn.addClass('tada');
+    }
+
+    function animateFail() {
+        $btn.removeClass('pulse infinite');
+        $btn.addClass('shake');
+        changeColour()
+        $btn.text("Please try again")
+    }
+    function changeColour() {
+        $btn.animate({
+		    backgroundColor: "rgb(228, 92, 92)"
+	    }, 1000);
+    }
+    function onActionButtonClick() {
+        $btn.addClass('pulse infinite');
+        setTimeout(animateFail, 4000);
+    }
+
+    $btn.click(onActionButtonClick);
+</script>
 </body>
 
 </html>
