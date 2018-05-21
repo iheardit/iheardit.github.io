@@ -314,8 +314,8 @@
     function animateFail() {
         $btn.removeClass('pulse infinite');
         $btn.addClass('shake');
-        changeColour()
-        $btn.text("Please try again")
+        changeColour();
+        $btn.text("Please try again");
     }
     function changeColour() {
         $btn.animate({
@@ -324,6 +324,7 @@
     }
     function onActionButtonClick() {
         $btn.addClass('pulse infinite');
+        $btn.text("Listening...");
         setTimeout(animateFail, 4000);
     }
 
