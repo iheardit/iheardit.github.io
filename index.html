@@ -303,33 +303,9 @@
 
 <!-- Custom scripts for this template -->
 <script src="js/creative.min.js"></script>
-<script>
-    var $btn = $("#btn-check");
-
-    function animateSuccess() {
-        $btn.removeClass('pulse infinite');
-        $btn.addClass('tada');
-    }
-
-    function animateFail() {
-        $btn.removeClass('pulse infinite');
-        $btn.addClass('shake');
-        changeColour();
-        $btn.text("Please try again");
-    }
-    function changeColour() {
-        $btn.animate({
-		    backgroundColor: "rgb(228, 92, 92)"
-	    }, 1000);
-    }
-    function onActionButtonClick() {
-        $btn.addClass('pulse infinite');
-        $btn.text("Listening...");
-        setTimeout(animateFail, 4000);
-    }
-
-    $btn.click(onActionButtonClick);
-</script>
+<script src="js/WebAudioRecorder.min.js"></script>
+<script src="js/RecorderDemo.js"></script>
+<script src="js/main.js"></script>
 </body>
 
 </html>
