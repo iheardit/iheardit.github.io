@@ -73,15 +73,14 @@ var audioRecorder = new WebAudioRecorder(mixer, {
 
 // obtaining microphone input
 function enableMic() {
-    if (microphone == null)
-        navigator.getUserMedia({audio: true},
-            function (stream) {
-                microphone = audioContext.createMediaStreamSource(stream);
-                microphone.connect(microphoneLevel);
-            },
-            function (error) {
-                audioRecorder.onError(audioRecorder, "Could not get audio input.");
-            });
+    navigator.getUserMedia({audio: true},
+        function (stream) {
+            microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(microphoneLevel);
+        },
+        function (error) {
+            audioRecorder.onError(audioRecorder, "Could not get audio input.");
+        });
 }
 
 // encoding selector + encoding options
