@@ -46,7 +46,7 @@ function onActionButtonClick() {
 }
 
 function callRecognizeFile(blob, encoding) {
-    var url = "http://ec2-3-120-190-175.eu-central-1.compute.amazonaws.com/recognize/";
+    var url = "https://api.iheardit.io/recognize/";
     var formData = new FormData();
     formData.append('file', blob);
     console.log("calling api");
