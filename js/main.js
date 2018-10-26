@@ -57,8 +57,9 @@ function callRecognizeFile(blob, encoding) {
         processData: false,
         contentType: false,
         success: function (r) {
-            animateSuccess(r['station']['name'].replace("_", ""));
-            console.log(r)
+            var data = JSON.parse(r)
+            animateSuccess(data['station']['name'].replace("_", ""));
+            console.log(data)
         },
         error: function (r) {
             animateFail("Please try again");
