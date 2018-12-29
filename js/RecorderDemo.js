@@ -16,31 +16,6 @@ var audioContext = new AudioContext;
 if (audioContext.createScriptProcessor == null)
     audioContext.createScriptProcessor = audioContext.createJavaScriptNode;
 
-/*
-test tone (440Hz sine with 2Hz on/off beep)
--------------------------------------------
-            ampMod    output
-osc(sine)-----|>--------|>----->(testTone)
-              ^         ^
-              |(gain)   |(gain)
-              |         |
-lfo(square)---+        0.5
-*/
-var testTone = (function () {
-    var osc = audioContext.createOscillator(),
-        lfo = audioContext.createOscillator(),
-        ampMod = audioContext.createGain(),
-        output = audioContext.createGain();
-    lfo.type = 'square';
-    lfo.frequency.value = 2;
-    osc.connect(ampMod);
-    lfo.connect(ampMod.gain);
-    output.gain.value = 0.5;
-    ampMod.connect(output);
-    osc.start();
-    lfo.start();
-    return output;
-})();
 
 /*
 master diagram
@@ -57,7 +32,7 @@ master diagram
 var microphone = undefined,     // obtained by user click
     microphoneLevel = audioContext.createGain(),
     mixer = audioContext.createGain();
-microphoneLevel.gain.value = 100;
+microphoneLevel.gain.value = 0.4;
 microphoneLevel.connect(mixer);
 
 // audio recorder object
@@ -73,6 +48,7 @@ var audioRecorder = new WebAudioRecorder(mixer, {
 
 // obtaining microphone input
 function enableMic() {
+    audioContext.resume();
     navigator.getUserMedia({audio: true},
         function (stream) {
             microphone = audioContext.createMediaStreamSource(stream);
