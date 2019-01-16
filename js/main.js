@@ -1,70 +1,69 @@
-var $btn = $("#btn-check");
-var btnRedo = ' <i class="fas fa-redo" id="btn-icon"></i>';
-var btnMic = ' <i class="fas fa-microphone" id="btn-icon"></i>';
+const button = document.querySelector('#btn-check');
+const recorder = new MicRecorder({
+  bitRate: 128
+});
+const iconRedo = ' <i class="fas fa-redo" id="btn-icon"></i>';
+const iconMic = ' <i class="fas fa-microphone" id="btn-icon"></i>';
+const URL = "https://api.iheardit.io/recognize/";
 
-function animateSuccess(text) {
-    $btn.removeClass('pulse infinite');
-    $btn.addClass('tada');
-    changeColour("rgb(77, 220, 141)", 1000);
-    $btn.text(text);
-    $btn.append(btnRedo)
+button.addEventListener('click', startRecording);
+
+function startRecording() {
+  button.classList.remove('tada');
+  button.classList.remove('shake');
+  changeColour(button, "#fff", 200);
+  recorder.start().then(() => {
+    button.innerHTML = 'Listening...' + iconMic;
+    button.classList.add('pulse');
+    button.classList.add('infinite');
+    button.removeEventListener('click', startRecording);
+    setTimeout(stopRecording, 4000);
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 
-function animateFail(text) {
-    $btn.removeClass('pulse infinite');
-    $btn.addClass('shake');
-    changeColour("rgb(228, 92, 92)", 1000);
-    $btn.text(text);
-    $btn.append(btnRedo)
+function stopRecording() {
+  recorder.stop().getMp3().then(([buffer, blob]) => {
+    console.log(buffer, blob);
+    callAPIFile(blob);
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 
-function changeColour(color, time) {
-    $btn.animate({
-        backgroundColor: color
-    }, time);
+function changeColour(element, color, time) {
+  $(element).animate({
+    backgroundColor: color
+  }, time);
 }
 
-audioRecorder.onComplete = function (recorder, blob) {
-    console.log("complete recording");
-    callRecognizeFile(blob, recorder.encoding);
-};
 
-function onActionButtonClick() {
-    enableMic();
-    startRecording();
-    console.log("started recording");
-    changeColour("#fff", 200);
-
-    $btn.removeClass("shake");
-    $btn.removeClass("tada");
-    $btn.addClass("pulse");
-    $btn.addClass("infinite");
-    $btn.text("Listening...");
-    $btn.append(btnMic);
-
-    setTimeout(stopRecording, 5000);
+function callAPIFile(blob) {
+  let formData = new FormData();
+  formData.append('file', blob);
+  $.ajax({
+    url: URL,
+    type: "post",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      button.classList.remove('pulse');
+      button.classList.remove('infinite');
+      button.classList.add('tada');
+      changeColour(button, "rgb(77, 220, 141)", 1000);
+      response['station']['name'].replace("_", "");
+      console.log(response)
+    },
+    error: function (r) {
+      button.classList.remove('pulse');
+      button.classList.remove('infinite');
+      button.classList.add('shake');
+      changeColour(button, "rgb(228, 92, 92)", 1000);
+      button.innerHTML = 'Please try again' + iconRedo;
+    }, finally: function (r) {
+      button.addEventListener('click', startRecording);
+    }
+  });
 }
-
-function callRecognizeFile(blob, encoding) {
-    var url = "https://api.iheardit.io/recognize/";
-    var formData = new FormData();
-    formData.append('file', blob);
-    console.log("calling api");
-    $.ajax({
-        url: url,
-        type: "post",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (r) {
-            var data = JSON.parse(r)
-            animateSuccess(data['station']['name'].replace("_", ""));
-            console.log(data)
-        },
-        error: function (r) {
-            animateFail("Please try again");
-        }
-    });
-}
-
-$btn.click(onActionButtonClick);
