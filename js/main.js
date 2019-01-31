@@ -53,17 +53,17 @@ function callAPIFile(blob) {
       button.classList.remove('infinite');
       button.classList.add('tada');
       changeColour(button, "rgb(77, 220, 141)", 1000);
-      response['station']['name'].replace("_", "");
-      console.log(response)
+      console.log(response);
+      button.innerHTML = response['station']['name'].replace("_", "") + iconRedo;
     },
-    error: function (r) {
+    error: function (xhr, textStatus, error) {
       button.classList.remove('pulse');
       button.classList.remove('infinite');
       button.classList.add('shake');
       changeColour(button, "rgb(228, 92, 92)", 1000);
       button.innerHTML = 'Please try again' + iconRedo;
-    }, finally: function (r) {
-      button.addEventListener('click', startRecording);
     }
+  }).always(function() {
+    button.addEventListener('click', startRecording);
   });
 }
